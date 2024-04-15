@@ -1,50 +1,50 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import {Text,View,StyleSheet, Button} from 'react-native'
 import SearchBar from '../components/SearchBar'
-import Yelp from '../api/Yelp'
-
+import useRestaurants from '../hooks/useRestaurants'
+import ResultList from '../components/ResultsList'
 
 
 const HomeScreen = ({navigation}) => {
 
     const [term,setTerm] = useState('')
     const [searchState,setSearchState] = useState('false')
-    const [restaurants,setRestaurents] = useState([])
-    const [errMessage,setErrMessage]= useState('')
-
-    const getRestaurenets  = async ()=> {
-        try{
-        const response = await Yelp.get('/search',{
-            params:{
-                limit:20,
-                term: term,
-                location: 'Edinburgh, UK'
-            }
+    const [restaurants,getRestaurenets,errMessage] = useRestaurants()
+   
+    const getFilteredRestaurents = (price) => {
+      return  restaurants.filter(restaurent => {
+            return restaurent.price === price
         })
-        setRestaurents(response.data.businesses)
-        }catch(err){
-            setErrMessage('Something went wrong! Try again later!')
-        }   
     }
 
 return <View style = {styles.mainContainer}>
     <SearchBar 
-    term = {term}
-    onTermChanged = {(newTerm)=> setTerm(newTerm)}
-    onFinished = {(searchState) => {
+        term = {term}
+        onTermChanged = {(newTerm)=> setTerm(newTerm)}
+        onFinished = {(searchState) => {
         setSearchState(searchState)
-        getRestaurenets()
+        getRestaurenets(term)
     }}
     />
     <View >
     <Text> HomeScreen</Text>
-    <Button 
+  
+   {/*  <Button 
         title='Go Back'
         onPress={()=> navigation.goBack()}
-    />
+    /> */}
+
     {searchState=='true' ? <Text>{term}</Text> : null }
     {errMessage ? <Text>{errMessage}</Text> : null }
     <Text>Results : {restaurants.length}</Text>
+
+    <ResultList restaurents = {getFilteredRestaurents('£')}
+    title={'Economy'}/>
+    <ResultList restaurents = {getFilteredRestaurents('££')}
+    title={'Medium'}/>
+    <ResultList restaurents = {getFilteredRestaurents('£££')}
+    title={'Business'}/>
+
     </View>
 </View>
 }
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         padding: 10,
         flex :1
-    }
+    },
 
 })
 
