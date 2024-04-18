@@ -15,7 +15,7 @@ export default()=>{
             }
         })
         setRestaurents(response.data.businesses)
-        console.log(response.data.businesses)
+        //console.log(response.data.businesses)
         }catch(err){
             setErrMessage('Something went wrong! Try again later!')
         }   

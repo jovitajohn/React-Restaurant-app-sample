@@ -5,7 +5,7 @@ import useRestaurants from '../hooks/useRestaurants'
 import ResultList from '../components/ResultsList'
 
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = () => {
 
     const [term,setTerm] = useState('')
     const [searchState,setSearchState] = useState('false')
@@ -31,11 +31,14 @@ return <View style = {styles.mainContainer}>
     {errMessage ? <Text>{errMessage}</Text> : null }
     <ScrollView style={{flexGrow: 1}}>
         <ResultList restaurents = {getFilteredRestaurents('£')}
-        title={'Cost Effective'}/>
+        title={'Cost Effective'}
+        />
         <ResultList restaurents = {getFilteredRestaurents('££')}
-        title={'Bit Pricer'}/>
+        title={'Bit Pricer'}
+        />
         <ResultList restaurents = {getFilteredRestaurents('£££')}
-        title={'Spender'}/>
+        title={'Spender'}
+        />
     </ScrollView>
 
     </View>
